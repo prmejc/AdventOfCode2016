@@ -1,13 +1,4 @@
-use std::error::Error;
-use std::fs::File;
-use std::io::prelude::*;
-use std::path::Path;
-
-pub fn main(){
-  part1();
-  println!("\n-----");
-  part2();
-}
+use util;
 
 fn part2(){
   let (mut x, mut y) = (0,2);
@@ -20,7 +11,7 @@ fn part2(){
                   };
   let dimension = keypad.len();
 
-  let instructions = get_file_text("./input/keypad_instructions.txt");
+  let instructions = util::get_file_text("./input/keypad_instructions.txt");
   
   for instruction in instructions.lines(){
     for step in instruction.chars(){
@@ -45,7 +36,7 @@ fn part1() {
                     vec!{7,8,9}};
   let dimension = keypad.len();
 
-  let instructions = get_file_text("./input/keypad_instructions.txt");
+  let instructions = util::get_file_text("./input/keypad_instructions.txt");
   
   for instruction in instructions.lines(){
     for step in instruction.chars(){
@@ -64,24 +55,3 @@ fn part1() {
 }
 
 
-fn get_file_text(file_name: &str) -> String {
-  let path = Path::new(file_name);
-  let display = path.display();     
-  // Open the path in read-only mode, returns `io::Result<File>`
-  let mut file = match File::open(&path) {
-      // The `description` method of `io::Error` returns a string that
-      // describes the error
-      Err(why) => panic!("couldn't open {}: {}", display,
-                                                 why.description()),
-      Ok(file) => file,
-  };
-
-  // Read the file contents into a string, returns `io::Result<usize>`
-  let mut s = String::new();
-  match file.read_to_string(&mut s) {
-      Err(why) => panic!("couldn't read {}: {}", display,
-                                                 why.description()),
-      Ok(_) => (),
-  }
-  return s;
-}
