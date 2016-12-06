@@ -10,6 +10,32 @@ pub fn part1(){
   println!("{:?}", sum);
 }
 
+pub fn part2(){
+  let rooms = util::get_file_text("./input/day4.txt");
+  for room in rooms.lines(){
+     let (decrypted_name, id) = decrypt_name(room);
+     if decrypted_name.contains("north"){
+        println!("Room id: {}", id);
+        break;
+     }
+  }
+}
+
+pub fn decrypt_name(room: &str) -> (String, i32) {
+   let name = room.split("[").next().unwrap()
+                 .split("-")
+                 .filter(|&e| match e.parse::<i32>(){
+                                                      Ok(_) => false,
+                                                      _ => true
+                                                    })
+                 .collect::<String>();
+  let id = room.split("[").next().unwrap().split("-").last().unwrap().parse::<i32>().unwrap();
+  let checksum = room.split("[").last().unwrap().replace("]","");
+
+  let test = name.chars().map(|a| ((((a as i32)+id-96)%26+96) as u8) as char).collect::<String>();
+  return (test,id);
+}
+
 
 fn is_a_room(room: &str) -> (bool, i32) {
 
